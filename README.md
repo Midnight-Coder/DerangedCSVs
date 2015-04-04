@@ -1,18 +1,6 @@
-express_boilerplate
+#Deranged CSVs
 ===================
 
-A basic express boilerplate project used for DataHero coding challenges
+A basic node.js app that supports upload of CSVs, join and processing of CSVs.
 
-# Get started
-This template should help you get started on the DataHero coding challenge.
-It is a basic Express Server that serves up a Hello World Index page at:
-http://localhost:3000
-
-We've already loaded in bootstrap on the client side to help you format your project
-
-# Running the Application
-1. Clone the repo
-2. npm install
-3. node app.js
-
-# Good luck!
+Uses the Express Boilerplate provided [here](https://github.com/Datahero/express_boilerplate)

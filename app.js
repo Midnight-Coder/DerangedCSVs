@@ -16,7 +16,7 @@ app.set('view engine', 'mustache');
 app.engine('mustache', require('hogan-express'));
 
 app.use(express.favicon());
-// app.use(express.bodyParser());
+app.use(express.bodyParser({defer: true}));
 app.use(express.methodOverride());
 app.use(express.static(path.join(__dirname, 'public')));
 

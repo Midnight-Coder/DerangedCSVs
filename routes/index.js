@@ -13,12 +13,12 @@ module.exports = function(app) {
     });
     app.post('/', function(req, res, next){
         res.writeHead(200, {'content-type': 'text/plain'});
-        var form = new formidable.IncomingForm();
-        console.log('Received POST', form);
+        var form = req.form;
+        console.log('Received POST');
         form.parse(req, function(err, fields, files) {
-            console.log("Parsing");
-            res.send('received upload:\n\n');
-            res.end(util.inspect({fields: fields, files: files}));
+            console.log("Parse complete:", files);
+            // res.send('received upload:\n\n');
+            console.log(util.inspect({fields: fields, files: files}));
         });
 
         form.on('fileBegin', function(name, file) {
@@ -26,10 +26,12 @@ module.exports = function(app) {
         });
 
         form.on('field', function(name, value) {
+            console.log('Writing field');
             res.write(name+": "+value+"\n");
         });
 
         form.on('file', function(name, file) {
+            console.log('Writing file');
             res.write("File: ");
             res.write(util.inspect(file));
             res.write("\n");
@@ -41,8 +43,8 @@ module.exports = function(app) {
 
         form.on('error', function(err) {
             console.log("ERROR UPLOADING:");
-            res.end();
             console.dir(err);
+            res.end();
         });
         form.on('aborted', function() {
             console.log("ABorted");

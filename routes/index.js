@@ -60,9 +60,4 @@ module.exports = function(app) {
             res.write('Uploaded!');
           });
     });
-
-    app.get('/analysis', function(req, res, next){
-        console.log('GET analysis');
-        res.render('analysis');
-    });
 };

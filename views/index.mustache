@@ -1,1 +1,17 @@
-<h1>Hello, world!</h1>
+<div id="UploadBox">
+    <form action="/" enctype="multipart/form-data" method="post">
+        <h2>File Uploader</h2>
+        <span id='UploadArea'>
+            <label for="FileBox1">Choose A File: </label>
+            <input type="file" id="FileBox1" name='csv1' />
+            <label for="NameBox1">Name: </label>
+            <input type="text" id="NameBox1" disabled />
+
+            <label for="FileBox2">Choose Another File: </label>
+            <input type="file" id="FileBox2" name='csv2' />
+            <label for="NameBox2">Name: </label>
+            <input type="text" id="NameBox2" disabled />
+        </span>
+        <input  type='submit' id='UploadButton' class='btn' value='Upload' />
+    </form>
+</div>

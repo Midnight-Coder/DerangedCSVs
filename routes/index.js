@@ -7,8 +7,7 @@ module.exports = function(app) {
     app.get('/', pages.index);
     app.post('/', function(req, res, next){
         if(app.done){
-            console.log(req.body); // form fields
-            console.log(req.files); // form files
+            console.log("Upload finished");
             res.status(204).end();
         }
         else{

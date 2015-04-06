@@ -4,10 +4,11 @@
  */
 
 var express = require('express');
-var http = require('http');
 var path = require('path');
 
 var app = express();
+var http = require('http').createServer(app);
+var io = require('socket.io')(http);
 
 app.done = false;
 // all environments
@@ -28,14 +29,22 @@ app.use(express.cookieSession({
 }));
 app.use(app.router);
 
-require('./routes')(app);
+//Setup io events
+io.on('connection', function (socket) {
+    console.log('CONNECTED');
+    socket.join('sessionId');
+    // socket.on()
+});
+
+
+require('./routes')(app, io);
 
 // development only
 if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-http.createServer(app).listen(app.get('port'), function() {
-  console.log('Express server listening on port ' + app.get('port'));
+http.listen(app.get('port'), function() {
+    console.log('Express server listening on port ' + app.get('port'));
 });
 

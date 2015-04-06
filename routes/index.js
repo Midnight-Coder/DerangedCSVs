@@ -4,7 +4,8 @@
 var pages = require('./pages');
 var formidable  = require('formidable');
 
-module.exports = function(app) {
+
+module.exports = function(app, io) {
     app.get('/', pages.index);
     app.post('/', function(req, res, next){
         var form = new formidable.IncomingForm();
@@ -13,16 +14,17 @@ module.exports = function(app) {
         form.multiples = true;
 
         form.parse(req, function(err, fields, files) {
-            console.log('Done', files);
-            res.status(204).end();
+            //TODO : redirect to analysis
         });
 
         form.on('progress', function(bytesReceived, bytesExpected) {
-            console.log("progress ..... " + (bytesReceived*100)/bytesExpected);
+            var progress = (bytesReceived * 100) / bytesExpected;
+            io.sockets.in('sessionId').emit('uploadProgress', progress);
         });
 
         form.on('error', function(err) {
             console.log("Error: ", err);
+            io.sockets.in('sessionId').emit('error', err);
         });
 
     });

@@ -23,7 +23,7 @@ function parseFile(filePath, res){
         console.log("parsed:" + filePath);
     }
 
-    var columns = true;
+    var columns = ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date'];
     parseCSVFile(filePath, columns, onNewRecord, onError, done);
 
 }

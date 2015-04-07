@@ -36,7 +36,7 @@ function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
 
 module.exports = function(app, io) {
     app.get('/', pages.index);
-    app.post('/analysis', function(req, res, next){
+    app.post('/employees', function(req, res, next){
 
         //Initialize the form
         var form = new formidable.IncomingForm();
@@ -54,7 +54,7 @@ module.exports = function(app, io) {
             app.locals.employeeDetails = files.csv1.path;
             app.locals.salaryDetails = files.csv2.path;
 
-            parseCSVFile(app.locals.employeeDetails, res, 'analysis',
+            parseCSVFile(app.locals.employeeDetails, res, 'employees',
                 ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date']);
         });
 
@@ -67,9 +67,9 @@ module.exports = function(app, io) {
             file.path = form.uploadDir + "/" + file.name;
         });
     });
-    app.get('/detail', function(req, res){
+    app.get('/salary', function(req, res){
         //TODO optimize: parsing whole csv per click --> solution: bootstrap to client Model
-        parseCSVFile(app.locals.salaryDetails, res, 'dets',
+        parseCSVFile(app.locals.salaryDetails, res, 'salary',
             ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'], req.query.id);
     });
 };

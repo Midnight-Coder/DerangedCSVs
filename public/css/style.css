@@ -1,37 +1,37 @@
 body{
-	font:normal 18px/150% Arial, Helvetica, sans-serif;
-	line-height: 1.3em;
-	background-color: rgba(192, 124, 46,0.8);
+    font:normal 18px/150% Arial, Helvetica, sans-serif;
+    line-height: 1.3em;
+    background-color: rgba(192, 124, 46,0.8);
 }
 .wrap{
-	width: 800px;
-	margin: 50px auto 10px auto;
-	background-color: rgba(30, 131, 216, 0.5);
+    width: 800px;
+    margin: 50px auto 10px auto;
+    background-color: rgba(30, 131, 216, 0.5);
 }
 h2{
-	font-variant: small-caps;
-	font-size: 2.6em;
-	text-align: center;
-	padding-top: 20px;
+    font-variant: small-caps;
+    font-size: 2.6em;
+    text-align: center;
+    padding-top: 20px;
 }
 .form-group{
-	padding-bottom: 35px;
+    padding-bottom: 35px;
 }
 div.upload-container{
-	width: 50%;
-	margin: 0 auto;
+    width: 50%;
+    margin: 0 auto;
 }
 div.upload-container label{
-	font-size: 15px;
-	font-weight: 200;
-	margin-bottom: 2px;
-	text-align: center;
+    font-size: 15px;
+    font-weight: 200;
+    margin-bottom: 2px;
+    text-align: center;
 }
 input[type='file']{
-	font-family: monospace;
-	margin-bottom: 10px;
+    font-family: monospace;
+    margin-bottom: 10px;
 }
 .submit-container{
-	padding-top: 20px;
-	text-align: center;
+    padding-top: 20px;
+    text-align: center;
 }

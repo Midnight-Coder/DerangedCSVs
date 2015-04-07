@@ -27,6 +27,10 @@ div.upload-container label{
     margin-bottom: 2px;
     text-align: center;
 }
+label  strong{
+    font: 600 larger monospace;
+    line-height: 1.4em;
+}
 input[type='file']{
     font-family: monospace;
     margin-bottom: 10px;

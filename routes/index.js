@@ -29,7 +29,11 @@ function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
 
     parser.on("finish", function(){
         parser.end();
-        res.render(templateName, {data: data});
+        res.render(templateName, {
+            title: 'Deranged CSVs',
+            layout: 'layout',
+            data: data
+        });
     });
     source.pipe(parser);
 }

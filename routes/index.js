@@ -6,21 +6,7 @@ var formidable  = require('formidable');
 var fs = require('fs');
 var Parse = require('csv-parse');
 
-function parseSalaryFile(filePath, res, templateName, columns, requestId){
-
-    function handleError(error){
-        res.send(error);
-    }
-
-    function done(output){
-        res.render(templateName, {output: output});
-    }
-
-    parseCSVFile(filePath, columns, handleError, done, requestId);
-
-}
-
-function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
+function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
     var source = fs.createReadStream(sourceFilePath),
         parser = Parse({
             columns:columns
@@ -29,24 +15,21 @@ function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
         record;
     parser.on("readable", function(){
         while (record = parser.read()) {
-            if(requestId){
-                if(requestId === record.employee_id){
-                    output.push(record);
-                }
-            }
-            else{
+            //Consider the record when requestID is absent -> general employee details
+            //Or when requestId matches the record's employee id
+            if(!requestId || requestId === record.employee_id){
                 output.push(record);
             }
         }
     });
 
     parser.on("error", function(error){
-        handleError(error);
+        res.send(error);
     });
 
     parser.on("finish", function(){
         parser.end();
-        done(output);
+        res.render(templateName, {output: output});
     });
     source.pipe(parser);
 }
@@ -71,7 +54,7 @@ module.exports = function(app, io) {
             app.locals.employeeDetails = files.csv1.path;
             app.locals.salaryDetails = files.csv2.path;
 
-            parseSalaryFile(app.locals.employeeDetails, res, 'analysis',
+            parseCSVFile(app.locals.employeeDetails, res, 'analysis',
                 ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date']);
         });
 
@@ -86,7 +69,7 @@ module.exports = function(app, io) {
     });
     app.get('/detail', function(req, res){
         //TODO optimize: parsing whole csv per click --> solution: bootstrap to client Model
-        parseSalaryFile(app.locals.salaryDetails, res, 'dets',
+        parseCSVFile(app.locals.salaryDetails, res, 'dets',
             ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'], req.query.id);
     });
 };

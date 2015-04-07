@@ -39,3 +39,14 @@ input[type='file']{
     padding-top: 20px;
     text-align: center;
 }
+/*Table Styles*/
+table {
+    text-align: center;
+}
+thead{
+    font-size: 1.15em;
+    font-variant: small-caps;
+}
+td a{
+    color:#424ECA;
+}

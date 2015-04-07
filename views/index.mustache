@@ -2,12 +2,12 @@
 <form action="/employees" enctype="multipart/form-data" method="post" class='form-group'>
     <div class='upload-container'>
         <label for="FileBox1">Choose CSV with <strong>Employee Details</strong></label>
-        <input type="file" id="FileBox1" name='csv1' accept='text/csv'/>
+        <input type="file" id="FileBox1" name='csv1' required='' accept='text/csv'/>
     </div>
 
     <div class='upload-container'>
         <label for="FileBox2">Choose CSV With <strong>Salary Details</strong></label>
-        <input type="file" id="FileBox2" name='csv2' accept='text/csv'/>
+        <input type="file" id="FileBox2" name='csv2' required='' accept='text/csv'/>
     </div>
     <div class='submit-container'>
         <input  type='submit' id='UploadButton' class='btn btn-primary btn-lg' value='Upload the files'/>

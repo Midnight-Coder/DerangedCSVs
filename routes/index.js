@@ -54,8 +54,10 @@ function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
 module.exports = function(app, io) {
     app.get('/', pages.index);
     app.post('/analysis', function(req, res, next){
+
+        //Initialize the form
         var form = new formidable.IncomingForm();
-        form.uploadDir = "./images";
+        form.uploadDir = "./tempStorage";
         form.type = 'multipart';
         form.multiples = true;
 

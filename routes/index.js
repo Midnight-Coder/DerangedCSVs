@@ -13,7 +13,6 @@ function parseSalaryFile(filePath, res, templateName, columns, requestId){
     }
 
     function done(output){
-        console.log("rendering:" + templateName + " with " + output.length);
         res.render(templateName, {output: output});
     }
 
@@ -28,17 +27,14 @@ function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
         }),
         output = [],
         record;
-    console.log("parsing:" + sourceFilePath);
     parser.on("readable", function(){
         while (record = parser.read()) {
             if(requestId){
-                console.log("requestId exitst!", record)
                 if(requestId === record.employee_id){
                     output.push(record);
                 }
             }
             else{
-                console.log("Emp:", record)
                 output.push(record);
             }
         }
@@ -49,7 +45,6 @@ function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
     });
 
     parser.on("finish", function(){
-        console.log("Parsed lines#" + output.length);
         parser.end();
         done(output);
     });
@@ -65,7 +60,6 @@ module.exports = function(app, io) {
         form.multiples = true;
 
         form.parse(req, function(err, fields, files) {
-            //TODO : redirect to analysis
             if(err){
                 res.send(400);
                 res.redirect('/');
@@ -75,8 +69,6 @@ module.exports = function(app, io) {
             app.locals.employeeDetails = files.csv1.path;
             app.locals.salaryDetails = files.csv2.path;
 
-            console.log(app.locals.employeeDetails + " " + app.locals.salaryDetails);
-
             parseSalaryFile(app.locals.employeeDetails, res, 'analysis',
                 ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date']);
         });
@@ -85,9 +77,13 @@ module.exports = function(app, io) {
             var progress = (bytesReceived * 100) / bytesExpected;
             io.sockets.in('sessionId').emit('uploadProgress', progress);
         });
+        //Rename formidable's random filenames
+        form.on('fileBegin', function(name, file){
+            file.path = form.uploadDir + "/" + file.name;
+        });
     });
     app.get('/detail', function(req, res){
-        //TODO optimize: parsing whole csv /employee_id click!!!
+        //TODO optimize: parsing whole csv per click --> solution: bootstrap to client Model
         parseSalaryFile(app.locals.salaryDetails, res, 'dets',
             ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'], req.query.id);
     });

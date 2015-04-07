@@ -6,7 +6,7 @@ var formidable  = require('formidable');
 var fs = require('fs');
 var Parse = require('csv-parse');
 
-function parseFile(filePath, res){
+function parseEmployeeFile(filePath, res){
 
 
     var output = [];
@@ -18,7 +18,8 @@ function parseFile(filePath, res){
         res.send(error);
     }
 
-    function done(linesRead){
+    function done(){
+        //TODO hide progress bar
         res.render('analysis', {output: output});
         console.log("parsed:" + filePath);
     }
@@ -28,7 +29,31 @@ function parseFile(filePath, res){
 
 }
 
+function parseSalaryFile(filePath, res, requestId){
+
+    var output = [];
+    function onNewRecord(record){
+        if(record.employee_id === requestId){
+            output.push(record);
+        }
+    }
+
+    function handleError(error){
+        res.send(error);
+    }
+
+    function done(){
+        res.render('dets', {output: output});
+    }
+
+    var columns = ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'];
+    parseCSVFile(filePath, columns, onNewRecord, handleError, done);
+
+}
+
 function parseCSVFile(sourceFilePath, columns, onNewRecord, handleError, done){
+    console.log('Parsing:' + sourceFilePath);
+    console.log(handleError);
     var source = fs.createReadStream(sourceFilePath);
 
     var parser = Parse({
@@ -44,10 +69,11 @@ function parseCSVFile(sourceFilePath, columns, onNewRecord, handleError, done){
     });
 
     parser.on("error", function(error){
-        handleError(error)
+        handleError(error);
     });
 
     parser.on("finish", function(){
+        parser.end();
         done();
     });
     source.pipe(parser);
@@ -69,14 +95,21 @@ module.exports = function(app, io) {
                 console.log("Error: ", err);
                 io.sockets.in('sessionId').emit('error', err);
             }
-            console.log(files.csv1.path + " " + files.csv2.path);
+            app.locals.employeeDetails = files.csv1.path;
+            app.locals.salaryDetails = files.csv2.path;
 
-            parseFile(files.csv1.path, res);
+            console.log(app.locals.employeeDetails + " " + app.locals.salaryDetails);
+
+            parseEmployeeFile(app.locals.employeeDetails, res);
         });
 
         form.on('progress', function(bytesReceived, bytesExpected) {
             var progress = (bytesReceived * 100) / bytesExpected;
             io.sockets.in('sessionId').emit('uploadProgress', progress);
         });
+    });
+    app.get('/detail', function(req, res){
+        //TODO optimize: parsing whole csv /employee_id click!!!
+        parseSalaryFile(app.locals.salaryDetails, res, req.query.id);
     });
 };

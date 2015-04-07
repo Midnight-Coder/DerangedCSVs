@@ -11,14 +11,14 @@ function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
         parser = Parse({
             columns:columns
         }),
-        output = [],
+        data = [],
         record;
     parser.on("readable", function(){
         while (record = parser.read()) {
             //Consider the record when requestID is absent -> general employee details
             //Or when requestId matches the record's employee id
             if(!requestId || requestId === record.employee_id){
-                output.push(record);
+                data.push(record);
             }
         }
     });
@@ -29,7 +29,7 @@ function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
 
     parser.on("finish", function(){
         parser.end();
-        res.render(templateName, {output: output});
+        res.render(templateName, {data: data});
     });
     source.pipe(parser);
 }

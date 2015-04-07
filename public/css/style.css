@@ -3,6 +3,11 @@ body{
     line-height: 1.3em;
     background-color: rgba(192, 124, 46,0.8);
 }
+.home{
+    margin: 10px;
+    font-size: 40px;
+    text-decoration: none;
+}
 .wrap{
     width: 800px;
     margin: 50px auto 10px auto;

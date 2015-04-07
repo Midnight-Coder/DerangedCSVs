@@ -2,10 +2,7 @@ window.addEventListener("load", Ready);
 function Ready(){
     var socket = io();
     if(window.File && window.FileReader){ //HTML5 rocks!
-        /*TODO
-         *Allow only csv
-         *Validate employee file is csv1
-        */
+        //TODO Validate employee file is csv1
         document.getElementById('FileBox1').addEventListener('change', function(e){
             document.getElementById('NameBox1').value = e.target.files[0].name;
         });

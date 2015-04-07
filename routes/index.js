@@ -1,10 +1,10 @@
 /**
  * Basic route controller
  */
-var pages = require('./pages');
-var formidable  = require('formidable');
-var fs = require('fs');
-var Parse = require('csv-parse');
+var pages = require('./pages'),
+    formidable  = require('formidable'),
+    fs = require('fs'),
+    Parse = require('csv-parse');
 
 function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
     var source = fs.createReadStream(sourceFilePath),
@@ -36,6 +36,7 @@ function parseCSVFile(sourceFilePath, res, templateName, columns, requestId){
 
 module.exports = function(app, io) {
     app.get('/', pages.index);
+
     app.post('/employees', function(req, res, next){
 
         //Initialize the form
@@ -47,7 +48,7 @@ module.exports = function(app, io) {
         form.parse(req, function(err, fields, files) {
             if(err){
                 res.send(400);
-                res.redirect('/');
+                res.redirect('/?page=uploaderror');
                 console.log("Error: ", err);
                 io.sockets.in('sessionId').emit('error', err);
             }
@@ -68,6 +69,7 @@ module.exports = function(app, io) {
             file.path = form.uploadDir + "/" + file.name;
         });
     });
+
     app.get('/salary', function(req, res){
         //Prevents direct access to /salary without relevant data present
         if(!app.locals.salaryDetails || !app.locals.employeeDetails){

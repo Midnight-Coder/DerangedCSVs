@@ -19,7 +19,7 @@ function parseFile(filePath, res){
     }
 
     function done(linesRead){
-        res.send(200, output);
+        res.render('analysis', {output: output});
         console.log("parsed:" + filePath);
     }
 

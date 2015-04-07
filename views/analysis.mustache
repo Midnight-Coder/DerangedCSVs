@@ -1,0 +1,28 @@
+<div id='dumper'>
+    <span> Uploading...</span>
+</div>
+
+<div class='table'>
+<table>
+    <thead>
+        <tr>
+            <td>employee_id</td>
+            <td>birthdate</td>
+            <td>firstname</td>
+            <td>lastname</td>
+            <td>sex</td>
+            <td>start_date</td>
+        </tr>
+    </thead>
+    <tbody>
+        {{#output}}
+        <tr>
+            <td><a href="/detail?id={{& employee_id}}">{{employee_id}}</a></td>
+            <td>{{birthdate}}</td>
+            <td>{{firstname}}</td>
+            <td>{{lastname}}</td>
+            <td>{{sex}}</td>
+            <td>{{start_date}}</td>
+        </tr>
+        {{/output}}
+    </tbody>

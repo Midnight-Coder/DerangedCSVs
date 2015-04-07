@@ -51,9 +51,10 @@ module.exports = function(app, io) {
                 console.log("Error: ", err);
                 io.sockets.in('sessionId').emit('error', err);
             }
+            //Locally store the file names
             app.locals.employeeDetails = files.csv1.path;
             app.locals.salaryDetails = files.csv2.path;
-
+            //Parse the csv and pass it column headers
             parseCSVFile(app.locals.employeeDetails, res, 'employees',
                 ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date']);
         });
@@ -68,7 +69,12 @@ module.exports = function(app, io) {
         });
     });
     app.get('/salary', function(req, res){
+        //Prevents direct access to /salary without relevant data present
+        if(!app.locals.salaryDetails || !app.locals.employeeDetails){
+            return res.redirect('/?page=salary');
+        }
         //TODO optimize: parsing whole csv per click --> solution: bootstrap to client Model
+        //Parse the csv and pass it column headers
         parseCSVFile(app.locals.salaryDetails, res, 'salary',
             ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'], req.query.id);
     });

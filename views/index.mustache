@@ -1,19 +1,15 @@
-<div id="UploadBox">
-    <form action="/employees" enctype="multipart/form-data" method="post">
-        <h2>File Uploader</h2>
-        <span id='UploadArea'>
-            <label for="FileBox1">Choose A File: </label>
-            <input type="file" id="FileBox1" name='csv1' accept='text/csv'/>
-            <label for="NameBox1">Name: </label>
-            <input type="text" id="NameBox1" disabled />
+<h2>File Uploader</h2>
+<form action="/employees" enctype="multipart/form-data" method="post" class='form-group'>
+    <div class='upload-container'>
+        <label for="FileBox1">Choose CSV with <strong>Employee Details</strong></label>
+        <input type="file" id="FileBox1" name='csv1' accept='text/csv'/>
+    </div>
 
-            <label for="FileBox2">Choose Another File: </label>
-            <input type="file" id="FileBox2" name='csv2' accept='text/csv'/>
-            <label for="NameBox2">Name: </label>
-            <input type="text" id="NameBox2" disabled />
-        </span>
-        <input  type='submit' id='UploadButton' class='btn' value='Upload' />
-    </form>
-</div>
-<div id='dumper'>
-</div>
+    <div class='upload-container'>
+        <label for="FileBox2">Choose CSV With <strong>Salary Details</strong></label>
+        <input type="file" id="FileBox2" name='csv2' accept='text/csv'/>
+    </div>
+    <div class='submit-container'>
+        <input  type='submit' id='UploadButton' class='btn btn-primary btn-lg' value='Upload the files'/>
+    </div>
+</form>

@@ -10,7 +10,6 @@ var app = express();
 var http = require('http').createServer(app);
 var io = require('socket.io')(http);
 
-app.done = false;
 // all environments
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -28,6 +27,13 @@ app.use(express.cookieSession({
   secret: 'dataheroRocks!'
 }));
 app.use(app.router);
+// redirect if nothing else sent a response
+//TODO redirect to 404
+app.use(redirectUnmatched);
+function redirectUnmatched(req, res){
+	res.redirect('/?page=invalid');
+}
+
 
 //Setup io events
 io.on('connection', function (socket) {

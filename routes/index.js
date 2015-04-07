@@ -6,62 +6,41 @@ var formidable  = require('formidable');
 var fs = require('fs');
 var Parse = require('csv-parse');
 
-function parseEmployeeFile(filePath, res){
-
-
-    var output = [];
-    function onNewRecord(record){
-        output.push(record);
-    }
-
-    function onError(error){
-        res.send(error);
-    }
-
-    function done(){
-        //TODO hide progress bar
-        res.render('analysis', {output: output});
-    }
-
-    var columns = ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date'];
-    parseCSVFile(filePath, columns, onNewRecord, onError, done);
-
-}
-
-function parseSalaryFile(filePath, res, requestId){
-
-    var output = [];
-    function onNewRecord(record){
-        if(record.employee_id === requestId){
-            output.push(record);
-        }
-    }
+function parseSalaryFile(filePath, res, templateName, columns, requestId){
 
     function handleError(error){
         res.send(error);
     }
 
-    function done(){
-        res.render('dets', {output: output});
+    function done(output){
+        console.log("rendering:" + templateName + " with " + output.length);
+        res.render(templateName, {output: output});
     }
 
-    var columns = ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'];
-    parseCSVFile(filePath, columns, onNewRecord, handleError, done);
+    parseCSVFile(filePath, columns, handleError, done, requestId);
 
 }
 
-function parseCSVFile(sourceFilePath, columns, onNewRecord, handleError, done){
-    var source = fs.createReadStream(sourceFilePath);
-
-    var parser = Parse({
-        delimiter: ',',
-        columns:columns
-    });
-
+function parseCSVFile(sourceFilePath, columns, handleError, done, requestId){
+    var source = fs.createReadStream(sourceFilePath),
+        parser = Parse({
+            columns:columns
+        }),
+        output = [],
+        record;
+    console.log("parsing:" + sourceFilePath);
     parser.on("readable", function(){
-        var record;
         while (record = parser.read()) {
-            onNewRecord(record);
+            if(requestId){
+                console.log("requestId exitst!", record)
+                if(requestId === record.employee_id){
+                    output.push(record);
+                }
+            }
+            else{
+                console.log("Emp:", record)
+                output.push(record);
+            }
         }
     });
 
@@ -70,15 +49,16 @@ function parseCSVFile(sourceFilePath, columns, onNewRecord, handleError, done){
     });
 
     parser.on("finish", function(){
+        console.log("Parsed lines#" + output.length);
         parser.end();
-        done();
+        done(output);
     });
     source.pipe(parser);
 }
 
 module.exports = function(app, io) {
     app.get('/', pages.index);
-    app.post('/', function(req, res, next){
+    app.post('/analysis', function(req, res, next){
         var form = new formidable.IncomingForm();
         form.uploadDir = "./images";
         form.type = 'multipart';
@@ -97,7 +77,8 @@ module.exports = function(app, io) {
 
             console.log(app.locals.employeeDetails + " " + app.locals.salaryDetails);
 
-            parseEmployeeFile(app.locals.employeeDetails, res);
+            parseSalaryFile(app.locals.employeeDetails, res, 'analysis',
+                ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date']);
         });
 
         form.on('progress', function(bytesReceived, bytesExpected) {
@@ -107,6 +88,7 @@ module.exports = function(app, io) {
     });
     app.get('/detail', function(req, res){
         //TODO optimize: parsing whole csv /employee_id click!!!
-        parseSalaryFile(app.locals.salaryDetails, res, req.query.id);
+        parseSalaryFile(app.locals.salaryDetails, res, 'dets',
+            ['employee_id', 'salary', 'start_of_salary', 'end_of_salary'], req.query.id);
     });
 };

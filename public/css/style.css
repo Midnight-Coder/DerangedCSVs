@@ -7,15 +7,17 @@ body{
     width: 800px;
     margin: 50px auto 10px auto;
     background-color: rgba(30, 131, 216, 0.5);
+    height: 100%;
 }
 h2{
     font-variant: small-caps;
     font-size: 2.6em;
     text-align: center;
-    padding-top: 20px;
+    padding: 20px 0px;
 }
 .form-group{
     padding-bottom: 35px;
+    line-height: 2.5em
 }
 div.upload-container{
     width: 50%;

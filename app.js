@@ -31,9 +31,7 @@ app.use(app.router);
 
 //Setup io events
 io.on('connection', function (socket) {
-    console.log('CONNECTED');
     socket.join('sessionId');
-    // socket.on()
 });
 
 

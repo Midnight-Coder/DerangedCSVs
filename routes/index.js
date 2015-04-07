@@ -21,7 +21,6 @@ function parseEmployeeFile(filePath, res){
     function done(){
         //TODO hide progress bar
         res.render('analysis', {output: output});
-        console.log("parsed:" + filePath);
     }
 
     var columns = ['employee_id', 'birthdate', 'firstname', 'lastname', 'sex', 'start_date'];
@@ -52,8 +51,6 @@ function parseSalaryFile(filePath, res, requestId){
 }
 
 function parseCSVFile(sourceFilePath, columns, onNewRecord, handleError, done){
-    console.log('Parsing:' + sourceFilePath);
-    console.log(handleError);
     var source = fs.createReadStream(sourceFilePath);
 
     var parser = Parse({
